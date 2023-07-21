@@ -310,6 +310,12 @@ namespace Content.Shared.Movement.Systems
             if (!MoverQuery.TryGetComponent(entity, out var moverComp))
                 return;
 
+            // From Ventcrawling, might need to reenable
+            // Relay the fact we had any movement event.
+            // TODO: Ideally we'd do these in a tick instead of out of sim.
+            // var moveEvent = new MoveInputEvent(entity, dir, state);
+            // RaiseLocalEvent(entity, ref moveEvent);
+
             // For stuff like "Moving out of locker" or the likes
             // We'll relay a movement input to the parent.
             if (_container.IsEntityInContainer(entity) &&
