@@ -64,6 +64,7 @@ public sealed class TipsSystem : EntitySystem
             4 => CompletionResult.FromHint(Loc.GetString("cmd-tippy-auto-4")),
             5 => CompletionResult.FromHint(Loc.GetString("cmd-tippy-auto-5")),
             6 => CompletionResult.FromHint(Loc.GetString("cmd-tippy-auto-6")),
+            7 => CompletionResult.FromHint(Loc.GetString("cmd-tippy-auto-7")),
             _ => CompletionResult.Empty
         };
     }
@@ -133,6 +134,9 @@ public sealed class TipsSystem : EntitySystem
 
         if (args.Length > 5)
             ev.WaddleInterval = float.Parse(args[5]);
+
+        if (args.Length > 6)
+            ev.Explode = bool.Parse(args[6]);
 
         if (actor != null)
             RaiseNetworkEvent(ev, actor.PlayerSession);

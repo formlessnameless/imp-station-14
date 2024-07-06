@@ -16,4 +16,5 @@ public sealed class TippyEvent : EntityEventArgs
     public float SpeakTime = 5;
     public float SlideTime = 3;
     public float WaddleInterval = 0.5f;
+    public bool Explode = false;
 }
