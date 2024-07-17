@@ -50,5 +50,6 @@ public sealed partial class TippyUI : UIWidget
         Revealing,
         Speaking,
         Hiding,
+        Explode
     }
 }

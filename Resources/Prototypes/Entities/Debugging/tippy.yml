@@ -17,6 +17,10 @@
       state: down
       visible: false
       map: [ "speaking" ]
+    - sprite: Tips/explode.rsi
+      state: explode
+      visible: false
+      map: [ "explode" ]
   # footstep sounds wile waddling onto the screen.
   - type: FootstepModifier
     footstepSoundCollection:

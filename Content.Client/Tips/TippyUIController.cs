@@ -75,7 +75,7 @@ public sealed class TippyUIController : UIController
     {
         if (_currentMessage == null)
             return default;
-
+        _currentMessage.Explode = true; //TODO: Remove
         var slideTime = _currentMessage.SlideTime;
 
         var offset = tippy.State switch
@@ -83,6 +83,7 @@ public sealed class TippyUIController : UIController
             TippyState.Hidden => 0,
             TippyState.Revealing => Math.Clamp(1 - _secondsUntilNextState / slideTime, 0, 1),
             TippyState.Hiding => Math.Clamp(_secondsUntilNextState / slideTime, 0, 1),
+            TippyState.Explode => 1,
             _ => 1,
         };
 
@@ -97,16 +98,21 @@ public sealed class TippyUIController : UIController
             return new Vector2(screenSize.X - offset * (tippy.DesiredSize.X + Padding), (screenSize.Y - tippy.DesiredSize.Y) / 2);
         }
 
-        var numSteps = (int) Math.Ceiling(slideTime / waddle);
+        var numSteps = tippy.State == TippyState.Explode ? 9 : (int) Math.Ceiling(slideTime / waddle);
         var curStep = (int) Math.Floor(numSteps * offset);
         var stepSize = (tippy.DesiredSize.X + Padding) / numSteps;
 
         if (curStep != _previousStep)
         {
             _previousStep = curStep;
-            sprite.Rotation = sprite.Rotation > 0
-                ? -WaddleRotation
-                : WaddleRotation;
+            if (tippy.State == TippyState.Explode)
+            {
+                sprite.Rotation = 0;
+            }
+            else
+            {
+                sprite.Rotation = sprite.Rotation > 0 ? -WaddleRotation : WaddleRotation;
+            }
 
             if (EntityManager.TryGetComponent(_entity, out FootstepModifierComponent? step))
             {
@@ -117,7 +123,14 @@ public sealed class TippyUIController : UIController
             }
         }
 
-        return new Vector2(screenSize.X - stepSize * curStep, (screenSize.Y - tippy.DesiredSize.Y) / 2);
+        if (tippy.State == TippyState.Explode)
+        {
+            return new Vector2(screenSize.X - stepSize * curStep, (screenSize.Y - tippy.DesiredSize.Y) / 2);
+        }
+        else
+        {
+            return new Vector2(screenSize.X - stepSize * curStep, (screenSize.Y - tippy.DesiredSize.Y) / 2);
+        }
     }
 
     private void NextState(TippyUI tippy)
@@ -173,6 +186,7 @@ public sealed class TippyUIController : UIController
                     sprite.LayerSetVisible("revealing", true);
                     sprite.LayerSetVisible("speaking", false);
                     sprite.LayerSetVisible("hiding", false);
+                    sprite.LayerSetVisible("explode", false);
                 }
                 sprite.Rotation = 0;
                 tippy.Label.SetMarkupPermissive(_currentMessage.Msg);
@@ -194,6 +208,7 @@ public sealed class TippyUIController : UIController
                     sprite.LayerSetVisible("revealing", false);
                     sprite.LayerSetVisible("speaking", true);
                     sprite.LayerSetVisible("hiding", false);
+                    sprite.LayerSetVisible("explode", false);
                 }
                 tippy.Label.Visible = true;
                 tippy.LabelPanel.Visible = true;
@@ -205,19 +220,41 @@ public sealed class TippyUIController : UIController
                 break;
 
             case TippyState.Speaking:
-                tippy.State = TippyState.Hiding;
-                if (!EntityManager.TryGetComponent(_entity, out sprite))
-                    return;
-                if (tippy.ModifyLayers)
+                if (_currentMessage != null && _currentMessage.Explode)
                 {
-                    sprite.LayerSetAnimationTime("hiding", 0);
-                    sprite.LayerSetVisible("revealing", false);
-                    sprite.LayerSetVisible("speaking", false);
-                    sprite.LayerSetVisible("hiding", true);
+                    tippy.State = TippyState.Explode;
+                    tippy.Entity.Scale = Vector2.One;
+                    if (!EntityManager.TryGetComponent(_entity, out sprite))
+                        return;
+                    if (tippy.ModifyLayers)
+                    {
+                        sprite.LayerSetAnimationTime("explode", 0);
+                        sprite.LayerSetVisible("revealing", false);
+                        sprite.LayerSetVisible("speaking", false);
+                        sprite.LayerSetVisible("hiding", false);
+                        sprite.LayerSetVisible("explode", true);
+                    }
+                    tippy.LabelPanel.Visible = false;
+                    if (_currentMessage != null)
+                        _secondsUntilNextState = 1.7F;
                 }
-                tippy.LabelPanel.Visible = false;
-                if (_currentMessage != null)
-                    _secondsUntilNextState = _currentMessage.SlideTime;
+                else
+                {
+                    tippy.State = TippyState.Hiding;
+                    if (!EntityManager.TryGetComponent(_entity, out sprite))
+                        return;
+                    if (tippy.ModifyLayers)
+                    {
+                        sprite.LayerSetAnimationTime("hiding", 0);
+                        sprite.LayerSetVisible("revealing", false);
+                        sprite.LayerSetVisible("speaking", false);
+                        sprite.LayerSetVisible("hiding", true);
+                        sprite.LayerSetVisible("explode", false);
+                    }
+                    tippy.LabelPanel.Visible = false;
+                    if (_currentMessage != null)
+                        _secondsUntilNextState = _currentMessage.SlideTime;
+                }
                 break;
 
             default: // finished hiding
