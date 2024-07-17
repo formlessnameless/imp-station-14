@@ -311,7 +311,6 @@
     sprite: Objects/Specific/Hydroponics/banana.rsi
     heldPrefix: peel
   - type: Slippery
-    launchForwardsMultiplier: 1.5
   - type: StepTrigger
     intersectRatio: 0.2
   - type: CollisionWake
@@ -388,7 +387,6 @@
       path: /Audio/Effects/slip.ogg
       params:
         volume: -100
-    launchForwardsMultiplier: 1.6
 
 - type: entity
   name: bananium peel
@@ -402,8 +400,6 @@
     sprite: Objects/Materials/materials.rsi
     heldPrefix: peel
   - type: Slippery
-    paralyzeTime: 4
-    launchForwardsMultiplier: 2
 
 - type: entity
   name: carrot
@@ -1942,7 +1938,26 @@
     state: fruit_pink
   - type: Produce
     seedId: lemo
+  - type: SliceableFood
+    count: 5
+    slice: FoodLemoSlice
   - type: Tag
     tags:
-    - Lemo
     - Fruit
+    - Lemo
+
+- type: entity
+  name: lemo slice
+  parent: ProduceSliceBase
+  id: FoodLemoSlice
+  description: It takes 35 days to go off.
+  components:
+  - type: FlavorProfile
+    flavors:
+      - sweet
+  - type: Sprite
+    sprite: Objects/Specific/Hydroponics/lemo.rsi
+  - type: Tag
+    tags:
+    - Fruit
+    - Slice
