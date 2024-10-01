@@ -26,6 +26,7 @@
     thresholds:
       0: Alive
       120: Dead
+  - type: VentCrawler
   - type: MovementSpeedModifier
     baseWalkSpeed: 2
     baseSprintSpeed: 4
