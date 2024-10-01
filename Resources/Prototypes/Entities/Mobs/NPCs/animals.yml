@@ -1227,6 +1227,7 @@
   description: The genetic bipedal ancestor of... Uh... Something. Yeah, there's definitely something on the station that descended from whatever this is.
   abstract: true
   components:
+  - type: VentCrawler
   - type: CombatMode
   - type: Inventory
     templateId: monkey
@@ -1309,7 +1310,6 @@
     spawned:
     - id: FoodMeat
       amount: 3
-  - type: VentCrawler
   - type: Puller
     needsHands: false
   - type: CanHostGuardian
