@@ -4,7 +4,7 @@ using Robust.Shared.Containers;
 namespace Content.Server.VentCraw.Components
 {
     [RegisterComponent]
-    public sealed class VentCrawHolderComponent : Component
+    public sealed partial class VentCrawHolderComponent : Component
     {
         public Container Container = null!;
 
@@ -41,7 +41,7 @@ namespace Content.Server.VentCraw.Components
         public TimeSpan LastCrawl;
 
         [DataField("crawlSound")]
-        public SoundCollectionSpecifier CrawlSound { get; } = new ("VentClaw", AudioParams.Default.WithVolume(5f));
+        public SoundCollectionSpecifier CrawlSound { get; set; } = new("VentClaw", AudioParams.Default.WithVolume(5f));
 
         [DataField("speed")]
         public float Speed = 0.15f;

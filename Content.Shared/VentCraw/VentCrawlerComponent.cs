@@ -15,6 +15,6 @@ public sealed partial class VentCrawlerComponent : Component
 
 
 [Serializable, NetSerializable]
-public sealed class EnterVentDoAfterEvent : SimpleDoAfterEvent
+public sealed partial class EnterVentDoAfterEvent : SimpleDoAfterEvent
 {
 }

@@ -3,7 +3,7 @@ namespace Content.Server.VentCraw.Components;
 [RegisterComponent]
 [Access(typeof(VentCrawTubeSystem))]
 [Virtual]
-public class VentCrawJunctionComponent : Component
+public partial class VentCrawJunctionComponent : Component
 {
     /// <summary>
     ///     The angles to connect to.
