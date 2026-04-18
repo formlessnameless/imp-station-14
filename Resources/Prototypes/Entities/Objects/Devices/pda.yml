@@ -129,7 +129,7 @@
     damage:
       types:
         Blunt: 4
-  - type: ComponentToggler #imp :)
+  - type: ComponentToggler # imp :)
     components:
     - type: LightningTarget
       priority: 1
@@ -137,6 +137,7 @@
     onUse: false
     onActivate: false
     predictable: false
+  - type: AltPdaAccess # imp
 
 - type: entity
   parent: BasePDA

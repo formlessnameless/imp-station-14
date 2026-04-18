@@ -17,7 +17,7 @@
   parent: BaseMentalAction
   id: ActionAccessPDA
   name: Access PDA
-  description: Open your PDA
+  description: Open connected PDA
   components:
   - type: Action
     itemIconStyle: NoItem
@@ -26,4 +26,4 @@
       state: state-laws
     useDelay: 0.5
   - type: InstantAction
-    event: !type:TogglePdaScreenEvent
+    event: !type:AltAccessPdaScreenEvent

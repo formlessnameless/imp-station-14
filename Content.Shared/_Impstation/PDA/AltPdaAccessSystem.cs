@@ -9,8 +9,10 @@ namespace Content.Shared._Impstation.PDA;
 
 public sealed class AltPdaAccessSystem : EntitySystem
 {
+    [Dependency] private readonly ActionContainerSystem _actionContainer = default!;
     [Dependency] private readonly InventorySystem _inventorySystem = default!;
     [Dependency] private readonly SharedUserInterfaceSystem _userInterface = default!;
+
 
     public override void Initialize()
     {
@@ -18,17 +20,27 @@ public sealed class AltPdaAccessSystem : EntitySystem
 
         SubscribeLocalEvent<AltPdaAccessComponent, GetItemActionsEvent>(OnGetActions);
         SubscribeLocalEvent<AltPdaAccessComponent, AltAccessPdaScreenEvent>(OnTogglePdaScreen);
+        SubscribeLocalEvent<AltPdaAccessComponent, MapInitEvent>(OnMapInit);
+    }
+
+    private void OnMapInit(Entity<AltPdaAccessComponent> ent, ref MapInitEvent args)
+    {
+        var (uid, comp) = ent;
+        _actionContainer.EnsureAction(uid, ref comp.AltPdaAccessEntity, comp.AltPdaAccessAction);
+        Dirty(uid, comp);
     }
 
     private void OnGetActions(Entity<AltPdaAccessComponent> ent, ref GetItemActionsEvent args)
     {
-        if (!TryComp<HandsComponent>(ent.Owner, out _))
+        var (uid, comp) = ent;
+
+        if (!TryComp<HandsComponent>(uid, out _))
             return;
 
-        if (_inventorySystem.InSlotWithFlags(ent.Owner, SlotFlags.IDCARD))
+        if (_inventorySystem.InSlotWithFlags(uid, SlotFlags.IDCARD))
         {
-            args.AddAction(ent.Comp.AltPdaAccessEntity);
-            Dirty(ent.Owner, ent.Comp);
+            args.AddAction(comp.AltPdaAccessEntity);
+            Dirty(uid, comp);
         }
     }
 
