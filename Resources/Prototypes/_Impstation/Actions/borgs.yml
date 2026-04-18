@@ -12,3 +12,18 @@
     useDelay: 0.5
   - type: InstantAction
     event: !type:TogglePdaScreenEvent
+
+- type: entity
+  parent: BaseMentalAction
+  id: ActionAccessPDA
+  name: Access PDA
+  description: Open your PDA
+  components:
+  - type: Action
+    itemIconStyle: NoItem
+    icon:
+      sprite: Interface/Actions/actions_borg.rsi
+      state: state-laws
+    useDelay: 0.5
+  - type: InstantAction
+    event: !type:TogglePdaScreenEvent
